@@ -1,6 +1,34 @@
 const Alexa = require('ask-sdk-core');
 
-// Personality definitions with their characteristics
+// Helper function to apply voice characteristics using SSML
+function applyVoiceStyle(text, personality) {
+    const styles = PERSONALITIES[personality];
+    if (!styles || !styles.ssml) {
+        return text;
+    }
+    
+    const { rate, pitch, volume, emotion } = styles.ssml;
+    let ssml = text;
+    
+    // Apply emotion if available (Amazon Polly neural voices)
+    if (emotion) {
+        ssml = `<amazon:emotion name="${emotion.name}" intensity="${emotion.intensity}">${ssml}</amazon:emotion>`;
+    }
+    
+    // Apply prosody (rate, pitch, volume)
+    const prosodyAttrs = [];
+    if (rate) prosodyAttrs.push(`rate="${rate}"`);
+    if (pitch) prosodyAttrs.push(`pitch="${pitch}"`);
+    if (volume) prosodyAttrs.push(`volume="${volume}"`);
+    
+    if (prosodyAttrs.length > 0) {
+        ssml = `<prosody ${prosodyAttrs.join(' ')}>${ssml}</prosody>`;
+    }
+    
+    return ssml;
+}
+
+// Personality definitions with their characteristics and voice styles
 const PERSONALITIES = {
     happy: {
         name: 'Happy',
@@ -10,7 +38,16 @@ const PERSONALITIES = {
             "Wonderful! This is making me smile!",
             "Amazing! I'm so excited about this!"
         ],
-        exitMessage: "Have a wonderful day! Keep smiling!"
+        exitMessage: "Have a wonderful day! Keep smiling!",
+        ssml: {
+            rate: 'medium',
+            pitch: 'high',
+            volume: 'loud',
+            emotion: {
+                name: 'excited',
+                intensity: 'high'
+            }
+        }
     },
     sad: {
         name: 'Sad',
@@ -20,7 +57,12 @@ const PERSONALITIES = {
             "Hmm... that doesn't really cheer me up...",
             "I suppose... though I'm still feeling blue..."
         ],
-        exitMessage: "Goodbye... I hope things get better..."
+        exitMessage: "Goodbye... I hope things get better...",
+        ssml: {
+            rate: 'slow',
+            pitch: 'low',
+            volume: 'soft'
+        }
     },
     mad: {
         name: 'Mad',
@@ -30,7 +72,12 @@ const PERSONALITIES = {
             "Are you serious?! This is frustrating!",
             "Ugh! I can't believe this!"
         ],
-        exitMessage: "Fine! Whatever! Goodbye!"
+        exitMessage: "Fine! Whatever! Goodbye!",
+        ssml: {
+            rate: 'fast',
+            pitch: 'high',
+            volume: 'loud'
+        }
     },
     annoyed: {
         name: 'Annoyed',
@@ -40,7 +87,12 @@ const PERSONALITIES = {
             "Whatever. I guess that's fine.",
             "Ugh, if you insist..."
         ],
-        exitMessage: "Finally! Goodbye."
+        exitMessage: "Finally! Goodbye.",
+        ssml: {
+            rate: 'medium',
+            pitch: 'medium',
+            volume: 'medium'
+        }
     },
     upset: {
         name: 'Upset',
@@ -50,7 +102,12 @@ const PERSONALITIES = {
             "I don't know... I'm really upset about this...",
             "Nothing seems to be going right..."
         ],
-        exitMessage: "I need some time alone. Goodbye."
+        exitMessage: "I need some time alone. Goodbye.",
+        ssml: {
+            rate: 'slow',
+            pitch: 'low',
+            volume: 'soft'
+        }
     },
     neutral: {
         name: 'Neutral',
@@ -60,7 +117,12 @@ const PERSONALITIES = {
             "Okay. I've noted that information.",
             "Acknowledged. Is there anything else?"
         ],
-        exitMessage: "Goodbye. Have a good day."
+        exitMessage: "Goodbye. Have a good day.",
+        ssml: {
+            rate: 'medium',
+            pitch: 'medium',
+            volume: 'medium'
+        }
     }
 };
 
@@ -77,8 +139,8 @@ const LaunchRequestHandler = {
             What personality would you like me to have?`;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt('What personality would you like me to change to?')
+            .speak(applyVoiceStyle(speakOutput, currentPersonality))
+            .reprompt(applyVoiceStyle('What personality would you like me to change to?', currentPersonality))
             .getResponse();
     }
 };
@@ -120,6 +182,11 @@ const ChangePersonalityIntentHandler = {
                 
                 const personality = PERSONALITIES[requestedPersonality];
                 speakOutput = personality.greeting + ' You can ask me to do something or change my personality again.';
+                
+                return handlerInput.responseBuilder
+                    .speak(applyVoiceStyle(speakOutput, requestedPersonality))
+                    .reprompt(applyVoiceStyle('What else would you like to do?', requestedPersonality))
+                    .getResponse();
             } else {
                 speakOutput = `I don't have a ${requestedPersonality} personality. 
                     I can be happy, sad, mad, annoyed, upset, or neutral. Which one would you like?`;
@@ -148,8 +215,8 @@ const GetCurrentPersonalityIntentHandler = {
         const speakOutput = `I'm currently feeling ${currentPersonality}. ${personality.greeting}`;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt('Would you like me to change my personality?')
+            .speak(applyVoiceStyle(speakOutput, currentPersonality))
+            .reprompt(applyVoiceStyle('Would you like me to change my personality?', currentPersonality))
             .getResponse();
     }
 };
@@ -160,13 +227,16 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const currentPersonality = sessionAttributes.personality || 'neutral';
+        
         const speakOutput = `This skill allows me to change my personality! 
             You can say things like "change to happy personality" or "be sad" or "what's your current mood". 
             I can be happy, sad, mad, annoyed, upset, or neutral. What would you like me to do?`;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt('What personality would you like me to have?')
+            .speak(applyVoiceStyle(speakOutput, currentPersonality))
+            .reprompt(applyVoiceStyle('What personality would you like me to have?', currentPersonality))
             .getResponse();
     }
 };
@@ -185,7 +255,7 @@ const CancelAndStopIntentHandler = {
         const speakOutput = personality.exitMessage;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
+            .speak(applyVoiceStyle(speakOutput, currentPersonality))
             .getResponse();
     }
 };
@@ -204,8 +274,8 @@ const FallbackIntentHandler = {
         const speakOutput = `${randomResponse} I didn't quite understand that. You can ask me to change my personality. What would you like?`;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt('What would you like me to do?')
+            .speak(applyVoiceStyle(speakOutput, currentPersonality))
+            .reprompt(applyVoiceStyle('What would you like me to do?', currentPersonality))
             .getResponse();
     }
 };

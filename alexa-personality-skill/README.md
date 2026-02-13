@@ -5,12 +5,18 @@ An Amazon Alexa skill that allows users to change Alexa's personality and mood d
 ## Features
 
 - **Multiple Personalities**: Six distinct personalities with unique characteristics
-  - **Happy**: Cheerful, enthusiastic, and positive
-  - **Sad**: Melancholic, down, and gloomy
-  - **Mad**: Angry, frustrated, and irritated
-  - **Annoyed**: Irritated, bothered, and impatient
-  - **Upset**: Distressed, troubled, and concerned
-  - **Neutral**: Calm, balanced, and professional
+  - **Happy**: Cheerful, enthusiastic, and positive (high pitch, loud volume, excited tone)
+  - **Sad**: Melancholic, down, and gloomy (low pitch, soft volume, slow pace)
+  - **Mad**: Angry, frustrated, and irritated (high pitch, loud volume, fast pace)
+  - **Annoyed**: Irritated, bothered, and impatient (medium tone with sarcastic delivery)
+  - **Upset**: Distressed, troubled, and concerned (low pitch, soft volume, slow pace)
+  - **Neutral**: Calm, balanced, and professional (medium pitch, volume, and pace)
+
+- **Voice Modulation with SSML**: Each personality uses Speech Synthesis Markup Language (SSML) to modify:
+  - **Speaking Rate**: Fast, medium, or slow to match the personality's energy
+  - **Pitch**: High, medium, or low to convey emotional state
+  - **Volume**: Loud, medium, or soft to reflect intensity
+  - **Emotion Tags**: Uses Amazon Polly's emotion features for enhanced expressiveness (e.g., excited voice for happy personality)
 
 - **Dynamic Responses**: Each personality has customized greetings, responses, and exit messages
 - **Easy Switching**: Change personalities with simple voice commands
@@ -135,6 +141,25 @@ alexa-personality-skill/
 
 ### Session Attributes
 The skill uses session attributes to maintain the current personality state throughout the conversation.
+
+### SSML Voice Modulation
+The skill uses Speech Synthesis Markup Language (SSML) to dynamically adjust Alexa's voice characteristics for each personality:
+
+**SSML Tags Used:**
+- `<prosody>`: Controls rate (speed), pitch (tone), and volume (loudness) of speech
+- `<amazon:emotion>`: Applies emotional expressiveness (available on neural voices)
+
+**Personality Voice Profiles:**
+| Personality | Rate   | Pitch  | Volume | Emotion          |
+|-------------|--------|--------|--------|------------------|
+| Happy       | Medium | High   | Loud   | Excited (High)   |
+| Sad         | Slow   | Low    | Soft   | -                |
+| Mad         | Fast   | High   | Loud   | -                |
+| Annoyed     | Medium | Medium | Medium | -                |
+| Upset       | Slow   | Low    | Soft   | -                |
+| Neutral     | Medium | Medium | Medium | -                |
+
+**Implementation:** The `applyVoiceStyle()` helper function automatically wraps all speech output with appropriate SSML tags based on the current personality, ensuring consistent voice characteristics throughout the conversation.
 
 ## Development
 
