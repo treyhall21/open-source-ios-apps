@@ -1,0 +1,22 @@
+{
+  "name": "alexa-personality-skill",
+  "version": "1.0.0",
+  "description": "Amazon Alexa skill that allows Alexa to change personalities and moods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "alexa-skill",
+    "personality",
+    "mood",
+    "echo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ask-sdk-core": "^2.13.0",
+    "ask-sdk-model": "^1.39.0"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "personality changer",
+      "intents": [
+        {
+          "name": "ChangePersonalityIntent",
+          "slots": [
+            {
+              "name": "personality",
+              "type": "PersonalityType"
+            }
+          ],
+          "samples": [
+            "change to {personality}",
+            "be {personality}",
+            "change your personality to {personality}",
+            "become {personality}",
+            "change mood to {personality}",
+            "switch to {personality} personality",
+            "I want you to be {personality}",
+            "act {personality}",
+            "be more {personality}",
+            "change to {personality} mood",
+            "set personality to {personality}",
+            "set mood to {personality}"
+          ]
+        },
+        {
+          "name": "GetCurrentPersonalityIntent",
+          "slots": [],
+          "samples": [
+            "what's your personality",
+            "what's your current personality",
+            "what's your mood",
+            "what mood are you in",
+            "how are you feeling",
+            "what's your current mood",
+            "tell me your personality",
+            "what personality are you"
+          ]
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": [
+        {
+          "name": "PersonalityType",
+          "values": [
+            {
+              "name": {
+                "value": "happy"
+              }
+            },
+            {
+              "name": {
+                "value": "sad"
+              }
+            },
+            {
+              "name": {
+                "value": "mad"
+              }
+            },
+            {
+              "name": {
+                "value": "angry",
+                "synonyms": [
+                  "mad",
+                  "furious"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "annoyed"
+              }
+            },
+            {
+              "name": {
+                "value": "upset"
+              }
+            },
+            {
+              "name": {
+                "value": "neutral"
+              }
+            },
+            {
+              "name": {
+                "value": "cheerful",
+                "synonyms": [
+                  "happy",
+                  "joyful"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "depressed",
+                "synonyms": [
+                  "sad",
+                  "down"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

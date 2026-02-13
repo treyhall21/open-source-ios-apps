@@ -1,0 +1,51 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "summary": "Change Alexa's personality and mood on demand",
+          "examplePhrases": [
+            "Alexa, open personality changer",
+            "Alexa, ask personality changer to be happy",
+            "Alexa, ask personality changer to change to sad"
+          ],
+          "keywords": [
+            "personality",
+            "mood",
+            "emotion",
+            "feelings",
+            "character",
+            "attitude"
+          ],
+          "name": "Personality Changer",
+          "description": "The Personality Changer skill allows Alexa to change her personality and mood based on your preferences. You can make Alexa happy, sad, mad, annoyed, upset, or neutral. Each personality comes with unique responses and characteristics that make interactions more engaging and fun. Simply ask Alexa to change her personality and enjoy a different conversational experience!"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "To test this skill:\n1. Say 'Alexa, open personality changer'\n2. Say 'change to happy' or 'be sad'\n3. Ask 'what's your current mood'\n4. Try different personalities: happy, sad, mad, annoyed, upset, neutral",
+      "category": "NOVELTY_AND_HUMOR",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:123456789012:function:personality-changer"
+        },
+        "interfaces": []
+      }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": ""
+        }
+      }
+    }
+  }
+}
