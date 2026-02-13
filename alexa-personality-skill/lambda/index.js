@@ -93,10 +93,25 @@ const ChangePersonalityIntentHandler = {
         const slots = handlerInput.requestEnvelope.request.intent.slots;
         const personalitySlot = slots.personality;
         
+        // Synonym mapping to base personalities
+        const synonymMap = {
+            'angry': 'mad',
+            'furious': 'mad',
+            'cheerful': 'happy',
+            'joyful': 'happy',
+            'depressed': 'sad',
+            'down': 'sad'
+        };
+        
         let speakOutput;
         
         if (personalitySlot && personalitySlot.value) {
-            const requestedPersonality = personalitySlot.value.toLowerCase();
+            let requestedPersonality = personalitySlot.value.toLowerCase();
+            
+            // Map synonyms to base personalities
+            if (synonymMap[requestedPersonality]) {
+                requestedPersonality = synonymMap[requestedPersonality];
+            }
             
             // Check if the personality exists
             if (PERSONALITIES[requestedPersonality]) {

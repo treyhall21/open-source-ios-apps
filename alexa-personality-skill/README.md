@@ -72,13 +72,15 @@ An Amazon Alexa skill that allows users to change Alexa's personality and mood d
    - Upload the `lambda` directory contents as a ZIP file
    - Set the handler to `index.handler`
    - Configure appropriate IAM role with CloudWatch Logs permissions
+   - Note the Lambda function ARN (e.g., `arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:YOUR_FUNCTION_NAME`)
 
 3. **Create the Alexa Skill**
    - Go to [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask)
    - Create a new Custom Skill
    - Set the invocation name to "personality changer"
    - Import the interaction model from `skill-package/interactionModels/custom/en-US.json`
-   - Update the endpoint to your Lambda function ARN in `skill-package/skill.json`
+   - Update the endpoint in `skill-package/skill.json` with your actual Lambda ARN
+   - **IMPORTANT**: Replace the placeholder ARN `arn:aws:lambda:us-east-1:123456789012:function:personality-changer` with your actual Lambda function ARN
 
 4. **Build and Test**
    - Build the interaction model in the Alexa Developer Console
@@ -141,7 +143,7 @@ The skill uses session attributes to maintain the current personality state thro
 To add a new personality, edit `lambda/index.js` and add a new entry to the `PERSONALITIES` object:
 
 ```javascript
-newpersonality: {
+newPersonality: {
     name: 'NewPersonality',
     greeting: "Greeting message",
     responses: [
